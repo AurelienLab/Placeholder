@@ -52,7 +52,7 @@ function Select-FormatProfile {
             return $allFormats
         }
         '5' {
-            Write-Host "`n📋 Manual selection:"
+            Write-Host "`n📝 Manual selection:"
             for ($i = 0; $i -lt $allFormats.Count; $i++) {
                 Write-Host "$($i + 1). $($allFormats[$i])"
             }
@@ -87,12 +87,13 @@ function Download-Placeholders {
         $width, $height = $format -split 'x'
 
         for ($i = 1; $i -le $numImages; $i++) {
-            $url = "https://picsum.photos/$width/$height?random=$RANDOM"
+            $random = Get-Random
+            $url = "https://picsum.photos/"+$width+"/"+$height+"?random="+$random
             $output = Join-Path $folder "image_$i.jpg"
             Invoke-WebRequest -Uri $url -OutFile $output -UseBasicParsing
         }
 
-        Write-Host "📁 $folder: $numImages images downloaded."
+        Write-Host "📁 $folder : $numImages images downloaded."
     }
 }
 
@@ -104,12 +105,13 @@ function Download-Avatars {
         New-Item -ItemType Directory -Path $folder -Force | Out-Null
 
         for ($i = 1; $i -le $numImages; $i++) {
-            $url = "https://i.pravatar.cc/$size?u=$RANDOM"
+            $random = Get-Random
+            $url = "https://i.pravatar.cc/"+$size+"?u="+$random
             $output = Join-Path $folder "avatar_$i.jpg"
             Invoke-WebRequest -Uri $url -OutFile $output -UseBasicParsing
         }
 
-        Write-Host "📁 $folder: $numImages avatars downloaded."
+        Write-Host "📁 $folder : $numImages avatars downloaded."
     }
 }
 
