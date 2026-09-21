@@ -13,12 +13,16 @@ all_formats=(
 
 avatar_sizes=(64 128 256 512 800)
 
+# DiceBear styles used as logo placeholders (SVG, scalable)
+logo_styles=("shapes" "rings" "identicon")
+
 # Number of images per type/format
 num_images=10
 
 # Base directories
 placeholder_dir="placeholders"
 avatar_dir="avatars"
+logo_dir="logos"
 
 # === Functions ===
 
@@ -59,6 +63,19 @@ download_avatars() {
       curl -sL "https://i.pravatar.cc/${size}?u=$RANDOM" -o "${subdir}/avatar_${i}.jpg"
     done
     echo "📁 $subdir: $num_images avatars downloaded."
+  done
+}
+
+download_logos() {
+  echo "▶️ Downloading logo placeholders from DiceBear..."
+
+  for style in "${logo_styles[@]}"; do
+    subdir="${logo_dir}/${style}"
+    mkdir -p "$subdir"
+    for i in $(seq 1 $num_images); do
+      curl -sL "https://api.dicebear.com/9.x/${style}/svg?seed=${RANDOM}" -o "${subdir}/logo_${i}.svg"
+    done
+    echo "📁 $subdir: $num_images logos downloaded."
   done
 }
 
@@ -123,6 +140,7 @@ choose_formats_menu() {
 
 only_avatars=false
 only_placeholders=false
+only_logos=false
 selected_formats=()
 
 while [[ $# -gt 0 ]]; do
@@ -132,6 +150,9 @@ while [[ $# -gt 0 ]]; do
       ;;
     --placeholder-only)
       only_placeholders=true
+      ;;
+    --logo-only)
+      only_logos=true
       ;;
     *)
       echo "❌ Unknown option: $1"
@@ -143,8 +164,8 @@ done
 
 # === Execute logic ===
 
-# If we need to download placeholders (either only or both), ask for formats
-if [[ $only_avatars == false ]]; then
+# If we need to download placeholders (either only or all), ask for formats
+if [[ $only_avatars == false && $only_logos == false ]]; then
   choose_formats_menu
 fi
 
@@ -153,9 +174,12 @@ if [[ $only_placeholders == true ]]; then
   download_placeholders
 elif [[ $only_avatars == true ]]; then
   download_avatars
+elif [[ $only_logos == true ]]; then
+  download_logos
 else
   download_placeholders
   download_avatars
+  download_logos
 fi
 
 echo "✅ All downloads completed successfully."

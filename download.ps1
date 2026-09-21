@@ -1,6 +1,7 @@
 param (
     [switch]$AvatarOnly,
-    [switch]$PlaceholderOnly
+    [switch]$PlaceholderOnly,
+    [switch]$LogoOnly
 )
 
 $allFormats = @(
@@ -12,9 +13,11 @@ $allFormats = @(
 )
 
 $avatarSizes = @(64, 128, 256, 512, 800)
+$logoStyles = @("shapes", "rings", "identicon")
 $numImages = 10
 $placeholderDir = "placeholders"
 $avatarDir = "avatars"
+$logoDir = "logos"
 
 function Get-Suffix {
     param ($format)
@@ -115,9 +118,27 @@ function Download-Avatars {
     }
 }
 
+function Download-Logos {
+    Write-Host "`n▶️ Downloading logo placeholders from DiceBear..." -ForegroundColor Cyan
+
+    foreach ($style in $logoStyles) {
+        $folder = Join-Path $logoDir $style
+        New-Item -ItemType Directory -Path $folder -Force | Out-Null
+
+        for ($i = 1; $i -le $numImages; $i++) {
+            $random = Get-Random
+            $url = "https://api.dicebear.com/9.x/"+$style+"/svg?seed="+$random
+            $output = Join-Path $folder "logo_$i.svg"
+            Invoke-WebRequest -Uri $url -OutFile $output -UseBasicParsing
+        }
+
+        Write-Host "📁 $folder : $numImages logos downloaded."
+    }
+}
+
 # === Main Execution Logic ===
 
-if (-not $AvatarOnly) {
+if (-not $AvatarOnly -and -not $LogoOnly) {
     $selectedFormats = Select-FormatProfile
 }
 
@@ -125,9 +146,12 @@ if ($PlaceholderOnly) {
     Download-Placeholders -formats $selectedFormats
 } elseif ($AvatarOnly) {
     Download-Avatars
+} elseif ($LogoOnly) {
+    Download-Logos
 } else {
     Download-Placeholders -formats $selectedFormats
     Download-Avatars
+    Download-Logos
 }
 
 Write-Host "`n✅ All downloads completed." -ForegroundColor Green
