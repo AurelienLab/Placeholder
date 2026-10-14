@@ -14,6 +14,7 @@ $allFormats = @(
 
 $avatarSizes = @(64, 128, 256, 512, 800)
 $logoStyles = @("shapes", "rings", "identicon")
+$logoPngSize = 256  # DiceBear caps PNG output at 256px
 $numImages = 10
 $placeholderDir = "placeholders"
 $avatarDir = "avatars"
@@ -127,12 +128,13 @@ function Download-Logos {
 
         for ($i = 1; $i -le $numImages; $i++) {
             $random = Get-Random
-            $url = "https://api.dicebear.com/9.x/"+$style+"/svg?seed="+$random
-            $output = Join-Path $folder "logo_$i.svg"
-            Invoke-WebRequest -Uri $url -OutFile $output -UseBasicParsing
+            $svgUrl = "https://api.dicebear.com/9.x/"+$style+"/svg?seed="+$random
+            $pngUrl = "https://api.dicebear.com/9.x/"+$style+"/png?seed="+$random+"&size="+$logoPngSize
+            Invoke-WebRequest -Uri $svgUrl -OutFile (Join-Path $folder "logo_$i.svg") -UseBasicParsing
+            Invoke-WebRequest -Uri $pngUrl -OutFile (Join-Path $folder "logo_$i.png") -UseBasicParsing
         }
 
-        Write-Host "📁 $folder : $numImages logos downloaded."
+        Write-Host "📁 $folder : $numImages logos downloaded (SVG + PNG)."
     }
 }
 

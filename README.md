@@ -4,7 +4,7 @@ This project includes two scripts (`download.sh` and `download.ps1`) to help you
 
 - High-resolution **placeholder images** from [Picsum Photos](https://picsum.photos)
 - Realistic **profile avatars** from [Pravatar.cc](https://pravatar.cc)
-- Abstract **logo placeholders** (SVG) from [DiceBear](https://www.dicebear.com)
+- Abstract **logo placeholders** (SVG + PNG) from [DiceBear](https://www.dicebear.com)
 
 Downloads are organized into folders by format and orientation.
 
@@ -19,7 +19,7 @@ Downloads are organized into folders by format and orientation.
   - All
   - Manual selection
 - 🧑‍💼 Download avatar images in square sizes from 64px to 800px
-- 🔷 Download scalable SVG logo placeholders in several styles (`shapes`, `rings`, `identicon`)
+- 🔷 Download logo placeholders in several styles (`shapes`, `rings`, `identicon`), each as a scalable SVG and a 256px PNG
 - 📁 Files are organized into folders like:
   - `placeholders/1920x1080_landscape/`
   - `avatars/256x256/`

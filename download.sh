@@ -13,8 +13,10 @@ all_formats=(
 
 avatar_sizes=(64 128 256 512 800)
 
-# DiceBear styles used as logo placeholders (SVG, scalable)
+# DiceBear styles used as logo placeholders (SVG + PNG)
 logo_styles=("shapes" "rings" "identicon")
+# PNG size in px (DiceBear caps PNG output at 256)
+logo_png_size=256
 
 # Number of images per type/format
 num_images=10
@@ -73,9 +75,11 @@ download_logos() {
     subdir="${logo_dir}/${style}"
     mkdir -p "$subdir"
     for i in $(seq 1 $num_images); do
-      curl -sL "https://api.dicebear.com/9.x/${style}/svg?seed=${RANDOM}" -o "${subdir}/logo_${i}.svg"
+      seed=$RANDOM
+      curl -sL "https://api.dicebear.com/9.x/${style}/svg?seed=${seed}" -o "${subdir}/logo_${i}.svg"
+      curl -sL "https://api.dicebear.com/9.x/${style}/png?seed=${seed}&size=${logo_png_size}" -o "${subdir}/logo_${i}.png"
     done
-    echo "📁 $subdir: $num_images logos downloaded."
+    echo "📁 $subdir: $num_images logos downloaded (SVG + PNG)."
   done
 }
 
